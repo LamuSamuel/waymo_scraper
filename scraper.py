@@ -4,7 +4,8 @@ import os
 import time
 import requests
 import cloudscraper
-from datetime import datetime, timezone
+from datetime import datetime
+import pytz
 
 GIST_TOKEN = os.environ["GIST_TOKEN"]
 GIST_ID = os.environ["GIST_ID"]
@@ -19,7 +20,8 @@ blacklist = {
 }
 
 def get_time():
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d %I:%M:%S %p UTC")
+    mst = pytz.timezone("US/Mountain")
+    return datetime.now(mst).strftime("%Y-%m-%d %I:%M:%S %p MST")
 
 def get_gist():
     headers = {"Authorization": f"token {GIST_TOKEN}"}
