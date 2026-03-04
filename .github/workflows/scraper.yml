@@ -18,6 +18,8 @@ jobs:
 
       - name: Install dependencies
         run: pip install requests cloudscraper
+      - name: Install dependencies
+        run: pip install requests cloudscraper pytz
 
       - name: Run scraper
         env:
