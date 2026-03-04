@@ -49,7 +49,11 @@ def scrape(scraper_client):
 
         text = response.text
         codes = re.findall(r'\b[A-Z0-9]{6,12}\b', text)
-        codes = [c for c in codes if c not in blacklist and any(char.isdigit() for char in c)]
+        codes = [c for c in codes if c not in blacklist]           # remove blacklisted words
+        codes = [c for c in codes if any(ch.isdigit() for ch in c)]  # must have a number
+        codes = [c for c in codes if not c.isalpha()]              # remove all-letter codes
+        codes = [c for c in codes if not c.isdigit()]              # remove all-number codes
+
         current_set = set(codes)
         print(f"Codes found: {current_set}")
 
@@ -62,7 +66,7 @@ def scrape(scraper_client):
             if code not in live and code not in archived:
                 live[code] = get_time()
 
-        # Move disappeared codes to archived with timestamp of when they left
+        # Move disappeared codes to archived with timestamp
         for code in list(live.keys()):
             if code not in current_set:
                 archived[code] = get_time()
@@ -74,11 +78,11 @@ def scrape(scraper_client):
     except Exception as e:
         print(f"Scrape error: {e}")
 
-# Run 10 times, every 30 seconds = 5 minutes total
+# Every 15 seconds, 20 scrapes = 5 minutes total
 scraper_client = cloudscraper.create_scraper()
 
-for i in range(10):
-    print(f"\n--- Scrape {i+1}/10 ---")
+for i in range(20):
+    print(f"\n--- Scrape {i+1}/20 ---")
     scrape(scraper_client)
-    if i < 9:
-        time.sleep(30)
+    if i < 19:
+        time.sleep(15)
