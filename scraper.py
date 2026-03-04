@@ -4,6 +4,7 @@ import os
 import time
 import requests
 import cloudscraper
+from datetime import datetime, timezone
 
 GIST_TOKEN = os.environ["GIST_TOKEN"]
 GIST_ID = os.environ["GIST_ID"]
@@ -16,6 +17,9 @@ blacklist = {
     "SCRIPT", "STYLE", "CLASS", "INDEX", "HTTPS",
     "HTTP", "HTML", "HEAD", "BODY", "META"
 }
+
+def get_time():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d %I:%M:%S %p UTC")
 
 def get_gist():
     headers = {"Authorization": f"token {GIST_TOKEN}"}
@@ -53,13 +57,16 @@ def scrape(scraper_client):
         live = data.get("live", {})
         archived = data.get("archived", {})
 
+        # New codes get a first-seen timestamp
         for code in current_set:
             if code not in live and code not in archived:
-                live[code] = "just now"
+                live[code] = get_time()
 
+        # Move disappeared codes to archived with timestamp of when they left
         for code in list(live.keys()):
             if code not in current_set:
-                archived[code] = live.pop(code)
+                archived[code] = get_time()
+                live.pop(code)
 
         update_gist({"live": live, "archived": archived})
         print("Gist updated successfully")
