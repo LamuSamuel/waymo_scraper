@@ -85,4 +85,4 @@ for i in range(20):
     print(f"\n--- Scrape {i+1}/20 ---")
     scrape(scraper_client)
     if i < 19:
-        time.sleep(15)
+        time.sleep(10)
