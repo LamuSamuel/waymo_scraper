@@ -61,20 +61,16 @@ def scrape(scraper_client):
 
         text = response.text
 
-        # Step 1: Basic regex match
         codes = re.findall(r'\b[A-Z0-9]{6,12}\b', text)
 
-        # Step 2: Strip whitespace / hidden chars
         codes = [c.strip() for c in codes]
 
-        # Step 3: Must contain BOTH letter and digit
         codes = [
             c for c in codes
             if any(ch.isalpha() for ch in c)
             and any(ch.isdigit() for ch in c)
         ]
 
-        # Step 4: Remove blacklist prefixes (DELETE4444 etc.)
         codes = [
             c for c in codes
             if not any(c.startswith(word) for word in blacklist)
@@ -87,12 +83,10 @@ def scrape(scraper_client):
         live = data.get("live", {})
         archived = data.get("archived", {})
 
-        # Add new codes
         for code in current_set:
             if code not in live and code not in archived:
                 live[code] = get_time()
 
-        # Move disappeared codes to archive
         for code in list(live.keys()):
             if code not in current_set:
                 archived[code] = get_time()
@@ -105,10 +99,9 @@ def scrape(scraper_client):
         print(f"Scrape error: {e}")
 
 
-# Create scraper
+
 scraper_client = cloudscraper.create_scraper()
 
-# Run 20 times (every 20 seconds)
 for i in range(20):
     print(f"\n--- Scrape {i+1}/20 ---")
     scrape(scraper_client)
