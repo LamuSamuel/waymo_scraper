@@ -2,6 +2,7 @@ name: Waymo Scraper
 
 on:
   schedule:
+  - cron: '*/5 * * * *'
   workflow_dispatch:  # allows manual trigger
 
 jobs:
