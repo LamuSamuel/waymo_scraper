@@ -1,28 +1,28 @@
-# name: Waymo Scraper
+name: Waymo Scraper
 
-# on:
-#   schedule:
-#   - cron: '*/5 * * * *'
-#   workflow_dispatch: 
+on:
+  schedule:
+  - cron: '50 4 10 12 *'
+  workflow_dispatch: 
 
-# jobs:
-#   scrape:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v4
-#         with:
-#           python-version: '3.12'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
 
-#       - name: Install dependencies
-#         run: pip install requests cloudscraper
-#       - name: Install dependencies
-#         run: pip install requests cloudscraper pytz
+      - name: Install dependencies
+        run: pip install requests cloudscraper
+      - name: Install dependencies
+        run: pip install requests cloudscraper pytz
 
-#       - name: Run scraper
-#         env:
-#           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
-#           GIST_ID: ${{ secrets.GIST_ID }}
-#         run: python scraper.py
+      - name: Run scraper
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+          GIST_ID: ${{ secrets.GIST_ID }}
+        run: python scraper.py
